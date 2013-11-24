@@ -3,7 +3,7 @@ require_relative 'bet.rb'
 
 class Accumulator
 
-  attr_reader :name
+  attr_accessor :name
 
   def initialize(name)
     @name = name

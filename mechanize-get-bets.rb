@@ -17,7 +17,7 @@ def get_username
 end
 
 def get_pin
-  ask("Password: ") {|q| q.echo = false}
+  ask("PIN: ") {|q| q.echo = false}
 end
 
 class AutoGetBets
@@ -34,12 +34,17 @@ class AutoGetBets
     mech_agent = Mechanize.new { | agent |
       agent.follow_meta_refresh = true
     }
-    mech_agent.get("http://www.skybet.com/skybet?action=GoStatic") do | home_page |
+    mech_agent.get("https://www.skybet.com/secure/identity/auth?consumer=skybet") do | home_page |
       user_home = home_page.form_with(:name => nil) do | form |
-        form.uname = username
-        form.pword = pin
+        form.username = username
+        form.pin = pin
       end.submit
-      bet_page = mech_agent.click(user_home.link_with(:text => /Unsettled Bets/))
+      begin
+        bet_page = mech_agent.click(user_home.link_with(:text => /Open Bets/))
+      rescue NoMethodError => e
+        puts "No method exception, this usually means the username and password were incorrect"
+        raise e
+      end
       return bet_page.body
     end
   end

@@ -89,6 +89,7 @@ module RunOptions
   def load_accumulators
     games = parse_games_to_yaml
     accumulators = []
+    Dir.mkdir(ACC_DIR) unless File.exists?(ACC_DIR)
     Dir.chdir(ACC_DIR) do
       Dir.foreach(".") { | file |
         next if file == "."

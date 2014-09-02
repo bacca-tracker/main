@@ -107,7 +107,7 @@ module WebDisplay
     games.each do
     | game |
       puts "<tr bgcolor=\"#{row_alt_colour(index)}\">"
-      puts "<td align='right'>#{game.home_team}</td><td align='right'>#{game.home_score}</td><td><b>@</b></td><td>#{game.away_score}</td><td>#{game.away_team}</td>"
+      puts "<td align='right'>#{game.away_team}</td><td align='right'>#{game.away_score}</td><td><b>@</b></td><td>#{game.home_score}</td><td>#{game.home_team}</td>"
       accumulators.each do
       | acc |
         bet = acc.get_bet(game)

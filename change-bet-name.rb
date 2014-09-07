@@ -19,8 +19,6 @@ if !to_name
   exit(1)
 end
 
-raise "DEBUG err"
-
 from_path = to_acc_path(from_name)
 to_path = to_acc_path(to_name)
 

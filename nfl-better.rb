@@ -85,6 +85,9 @@ module RunOptions
     puts "    --web-display <mode>   Output HTML for a given mode"
   end
 
+  def canonical_numeric_value(acc)
+    acc.name =~ /\d/ ? 1 : -1
+  end
 
   def load_accumulators
     games = parse_games_to_yaml
@@ -99,6 +102,11 @@ module RunOptions
         accumulators.push(acc)
       }
     end
+    # Bets whose name contains a number are considered secondary in importance,
+    # and will therefore be pushed off towards the right of the screen.
+    accumulators.sort! { | lhs, rhs |
+      canonical_numeric_value(lhs) <=> canonical_numeric_value(rhs)
+    }
     return accumulators, games
   end
 

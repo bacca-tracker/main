@@ -41,7 +41,7 @@ module Setup
   include Common
 
   def get_name
-    puts "Name:"
+    puts "Display Name:"
     $stdin.gets.strip
   end
 

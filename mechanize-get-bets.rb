@@ -28,6 +28,7 @@ class AutoGetBets
   end
 
   def login_and_get_open_bets
+    puts("Enter SkyBet Credentials")
     username = get_username
     pin = get_pin
 

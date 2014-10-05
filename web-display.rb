@@ -64,7 +64,7 @@ module WebDisplay
     puts "</td>"
   end
 
-  def display_html_v2(accumulators, games, mode)
+  def display_html(accumulators, games, mode)
     puts "Content-type: text/html\n\n"
     puts "<html>"
     puts "<head>"

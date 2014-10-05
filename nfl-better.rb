@@ -121,7 +121,7 @@ module RunOptions
     # Refresh game scores, compare with stored accumulators, output HTML
     include WebDisplay
     accumulators, games = load_accumulators
-    display_html_v2(accumulators, games, mode)
+    display_html(accumulators, games, mode)
   end
 
 end

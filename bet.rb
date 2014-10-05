@@ -53,7 +53,7 @@ class Bet
     if bet_on.nil?
       return "No Bet"
     elsif !game.active?
-      return "Not in Play"
+      return "NS"
     elsif winning?
       return game.final ? "Won" : "Winning"
     else

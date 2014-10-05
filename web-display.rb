@@ -15,7 +15,7 @@ module WebDisplay
   ROW_ALT_1 = WHITE
   ROW_ALT_2 = LIGHT_GRAY
   SCALE = 4
-  LOCATION_OF_SINGLE_VIEW = "acca-tracker3"
+  LOCATION_OF_SINGLE_VIEW = "acca-tracker2"
   TABLE_WIDTH = nil
 #  TABLE_WIDTH = "150"
 

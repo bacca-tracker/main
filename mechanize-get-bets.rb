@@ -6,6 +6,8 @@ require 'highline/import'
 require 'mechanize'
 require 'nokogiri'
 
+OPEN_BET_PAGE = "https://www.skybet.com/secure/account?action=GoShowUnsettledBets"
+
 def local_body
   f = File.open("inspect.html")
   f.read
@@ -22,6 +24,17 @@ end
 
 class LoginFailureException < RuntimeError
 
+end
+
+def construct_identifier(row_text)
+  bet_type = row_text[1]
+  receipt  = row_text[2]
+  stake    = row_text[3]
+
+  receipt.gsub!("\t", "")
+  receipt.gsub!("\n", "")
+
+  bet_type + " (" + receipt + ") with " + stake + " stake." # Hints for user to identify this acc.
 end
 
 class AutoGetBets
@@ -50,9 +63,19 @@ class AutoGetBets
         raise LoginFailureException
       end
 
+      raw_bodies = ""
       # Try to get the bet page
-      mech_agent.get("https://www.skybet.com/secure/account?action=GoShowUnsettledBets") do | bet_page |
-        return bet_page.body
+      mech_agent.get(OPEN_BET_PAGE) do | bet_page |
+        raw_bodies += bet_page.body
+
+        older_transactions_link = bet_page.link_with(:text => /Older transactions/)
+        if (older_transactions_link)
+          bet_page = mech_agent.click(older_transactions_link)
+          raw_bodies += bet_page.body
+        end
+
+        return raw_bodies
+
       end
     end
   end
@@ -62,24 +85,39 @@ class AutoGetBets
   end
 
   def parse_body_to_bets(raw_body)
+    # Sometimes Sky wil display part of a bet on one page, and then the whole thing on the new one.
+    # Over-writing any partial bets with their full equivalents solves this.
+    accs_hash = {}
     body = Nokogiri::HTML::DocumentFragment.parse(raw_body)
     body.css('tr').map do | row |
-      data = row.xpath('./td').map(&:text)[4]
-      next unless data
-      data.gsub!("\t", "")
+
+      row_text = row.xpath('./td').map(&:text)
+      bet_data = row_text[4]
+      next unless (bet_data)
+
+      bet_data.gsub!("\t", "")
       str = ""
-      data.each_line { | line |
+      bet_data.each_line { | line |
         next if line == "\n"
         str += line.strip
         str += "\n"
       }
+
+      accs_hash[construct_identifier(row_text)] = str
+    end
+
+    accs_hash.each do
+    | identifier, string |
+      puts ""
+      puts "Found #{identifier}"
       begin
-        TextAddBet.new.parse_from_str(get_name, str)
+        TextAddBet.new.parse_from_str(get_name, string)
       rescue FailedToParseException => e
         puts e.message
         puts "Moving to next bet, if one exists..."
       end
     end
+
   end
 
 end

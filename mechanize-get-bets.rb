@@ -20,6 +20,10 @@ def get_pin
   ask("PIN: ") {|q| q.echo = false}
 end
 
+class LoginFailureException < RuntimeError
+
+end
+
 class AutoGetBets
 
   def initialize
@@ -36,18 +40,25 @@ class AutoGetBets
       agent.follow_meta_refresh = true
     }
     mech_agent.get("https://www.skybet.com/secure/identity/auth?consumer=skybet") do | home_page |
+      # Login
       user_home = home_page.form_with(:name => nil) do | form |
         form.username = username
         form.pin = pin
       end.submit
-      begin
-        bet_page = mech_agent.click(user_home.link_with(:text => /Open Bets/))
-      rescue NoMethodError => e
-        puts "No method exception, this usually means the username and password were incorrect"
-        raise e
+      if (login_failed(user_home))
+        puts "Login failed"
+        raise LoginFailureException
       end
-      return bet_page.body
+
+      # Try to get the bet page
+      mech_agent.get("https://www.skybet.com/secure/account?action=GoShowUnsettledBets") do | bet_page |
+        return bet_page.body
+      end
     end
+  end
+
+  def login_failed(user_home)
+    user_home.body.include?("We couldn't recognise the details you entered. Please try again")
   end
 
   def parse_body_to_bets(raw_body)

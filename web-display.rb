@@ -1,8 +1,5 @@
 
-require_relative 'common-display.rb'
-
 module WebDisplay
-  include CommonDisplay
 
   # Constants
   RED = "#FF0000"

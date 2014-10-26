@@ -131,7 +131,7 @@ module RunOptions
   def web_display(mode)
     # Refresh game scores, compare with stored accumulators, output HTML
     include WebDisplay
-    accumulators, games = (mode == Modes::NON_REFRESHING_SINGLE) ? non_refreshing_load_one_from_CGI : load_accumulators
+    accumulators, games = (mode == Modes::NON_REFRESHING_SINGLE) ? non_refreshing_load_one_from_CGI : refreshing_load_accumulators
     display_html(accumulators, games, mode)
   end
 

@@ -1,6 +1,12 @@
 
 module WebDisplay
 
+  module Modes
+    STANDARD = "1"
+    GRAPH    = "2"
+    NON_REFRESHING_SINGLE = "3"
+  end
+
   # Constants
   RED = "#FF0000"
   YELLOW = "#FFFF00"
@@ -44,7 +50,7 @@ module WebDisplay
   end
 
   def get_status_cell(bet, mode)
-    if (mode == "1")
+    if (mode == Modes::STANDARD)
       get_status_simple(bet)
     else
       get_status_graph(bet)

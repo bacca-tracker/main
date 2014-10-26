@@ -26,7 +26,7 @@ class LeagueParser
       # Replace score "" with nil
       away_score = game_arr[5] == "" ? nil : game_arr[5]
       home_score = game_arr[7] == "" ? nil : game_arr[7]
-      final = (game_arr[2] == "Final")
+      final = (game_arr[2].include?("Final"))
       game = Game.new(home_team, away_team, home_score, away_score, final)
       games.push(game)
     }

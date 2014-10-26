@@ -1,0 +1,2 @@
+#!/bin/sh
+./nfl-better.rb --web-display 3

@@ -18,7 +18,7 @@ module WebDisplay
   ROW_ALT_1 = WHITE
   ROW_ALT_2 = LIGHT_GRAY
   SCALE = 4
-  LOCATION_OF_SINGLE_VIEW = "acca-tracker2"
+  LOCATION_OF_SINGLE_VIEW = "acca-tracker3"
   TABLE_WIDTH = nil
 #  TABLE_WIDTH = "150"
 
@@ -50,7 +50,7 @@ module WebDisplay
   end
 
   def get_status_cell(bet, mode)
-    if (mode == Modes::STANDARD)
+    if (mode != Modes::GRAPH)
       get_status_simple(bet)
     else
       get_status_graph(bet)

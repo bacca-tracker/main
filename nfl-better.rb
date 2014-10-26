@@ -89,8 +89,7 @@ module RunOptions
     acc.name =~ /\d/ ? 1 : -1
   end
 
-  def load_accumulators
-    games = parse_games_to_yaml
+  def common_load_accumulators(games)
     accumulators = []
     Dir.mkdir(ACC_DIR) unless File.exists?(ACC_DIR)
     Dir.chdir(ACC_DIR) do
@@ -110,6 +109,18 @@ module RunOptions
     return accumulators, games
   end
 
+  def refreshing_load_accumulators
+    common_load_accumulators(parse_games_to_yaml)
+  end
+
+  def non_refreshing_load_one_from_CGI
+    name = CGI.new.params['Name'][0]
+    all_accs, games = common_load_accumulators(load_games_from_yaml)
+    interesting_acc = all_accs.find { | a | a.name == name }
+    ret = interesting_acc.nil? ? [] : [interesting_acc]
+    return ret, games
+  end
+
   def display
     # Refresh game scores, then display versus stored accumulators
     parse_games_to_yaml
@@ -120,7 +131,7 @@ module RunOptions
   def web_display(mode)
     # Refresh game scores, compare with stored accumulators, output HTML
     include WebDisplay
-    accumulators, games = load_accumulators
+    accumulators, games = (mode == Modes::NON_REFRESHING_SINGLE) ? non_refreshing_load_one_from_CGI : load_accumulators
     display_html(accumulators, games, mode)
   end
 
@@ -153,10 +164,6 @@ opts.each do |opt, arg|
     when '--auto-add'
       add_bets(2)
     when '--web-display'
-      if (arg == "1" || arg == "2")
-        web_display(arg)
-      else
-        help
-      end
+      web_display(arg)
   end
 end

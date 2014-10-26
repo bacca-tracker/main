@@ -68,8 +68,9 @@ class AutoGetBets
       mech_agent.get(OPEN_BET_PAGE) do | bet_page |
         raw_bodies += bet_page.body
 
-        older_transactions_link = bet_page.link_with(:text => /Older transactions/)
-        if (older_transactions_link)
+        while true do
+          older_transactions_link = bet_page.link_with(:text => /Older transactions/)
+          break if older_transactions_link.nil?
           bet_page = mech_agent.click(older_transactions_link)
           raw_bodies += bet_page.body
         end

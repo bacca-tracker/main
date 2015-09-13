@@ -11,7 +11,7 @@ end
 
 def parse_bet(line)
   odds = /(\d+\/\d+|evens)/
-  raise(FailedToParseException.new, "Not a valid bet - #{line}") unless line =~ /^([A-Za-z ]+)\s\@\s#{odds}(\s(\+|\-)\S+)?/
+  raise(FailedToParseException.new, "Not a valid bet - #{line}") unless line =~ /^\|([A-Za-z ]+)\|\s\@\s#{odds}(\s(\+|\-)\S+)?/
   spread = $3 ? $3.strip : 0
   return $1, spread
 end
@@ -25,10 +25,6 @@ class TextAddBet
 
   def initialize
     @games = load_games_from_yaml
-  end
-
-  def get_game(away_team, home_team)
-    @games.select { | game | game.teams_match?(away_team, home_team) }.first
   end
 
   def parse_from_cli
@@ -47,10 +43,14 @@ private
     bet_text.each_line { | line |
       if game_descriptor
         raise(FailedToParseException.new, "Not a valid descriptor - #{line}") unless contains_two_team_names(line)
-        line =~ /^(.*)\sat\s(.*)$/
-        raise(FailedToParseException.new, "Not a team1 - #{$1}") unless TEAM_GEOS.include?($1)
-        raise(FailedToParseException.new, "Not a team2 - #{$2}") unless TEAM_GEOS.include?($2)
-        this_game = get_game($1, $2)
+        line =~ /^(.*)\sv\s(.*)$/
+        team1 = $1
+        team2 = $2
+        # Work around for St Louis Rams, TODO FIXME when I have more time.
+        team1 = "St. Louis"  if team1 == "St. Louis Rams"
+        raise(FailedToParseException.new, "Not a team1 - #{team1}") unless TEAM_GEOS.include?(team1)
+        raise(FailedToParseException.new, "Not a team2 - #{team2}") unless TEAM_GEOS.include?(team2)
+        this_game = get_game(team1, team2)
         raise(FailedToParseException.new, "No game for for - #{line}") unless this_game
       else
         bet_on, spread = parse_bet(line)
@@ -67,6 +67,14 @@ private
       YAML.dump(accumulator, file)
     }
     puts "\nAdded successfuly"
+  end
+
+  def get_game(team1, team2)
+    directional_get_game(team1, team2) || directional_get_game(team2, team1)
+  end
+
+  def directional_get_game(home_team, away_team)
+    @games.select { | game | game.teams_match?(away_team, home_team) }.first
   end
 
 end

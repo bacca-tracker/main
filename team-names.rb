@@ -3,7 +3,7 @@
 # Public Interface #
 ####################
 def token_to_display_name(tok)
-  TOKEN_TO_DISPLAY_NAME(tok)
+  TOKEN_TO_DISPLAY_NAME[tok]
 end
 
 def string_to_token(str)

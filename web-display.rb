@@ -1,4 +1,6 @@
 
+require_relative 'team-names.rb'
+
 module WebDisplay
 
   module Modes
@@ -110,7 +112,9 @@ module WebDisplay
     games.each do
     | game |
       puts "<tr bgcolor=\"#{row_alt_colour(index)}\">"
-      puts "<td align='right'>#{game.away_team}</td><td align='right'>#{game.away_score}</td><td><b>@</b></td><td>#{game.home_score}</td><td>#{game.home_team}</td>"
+      away_team_display = token_to_display_name(game.away_team)
+      home_team_display = token_to_display_name(game.home_team)
+      puts "<td align='right'>#{away_team_display}</td><td align='right'>#{game.away_score}</td><td><b>@</b></td><td>#{game.home_score}</td><td>#{home_team_display}</td>"
       accumulators.each do
       | acc |
         bet = acc.get_bet(game)

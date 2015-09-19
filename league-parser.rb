@@ -21,8 +21,8 @@ class LeagueParser
     | game_str |
       game_arr = game_str.gsub('"',"").split(",")
       # If we can't find the team in the conversion array, just use the initials
-      away_team = CODE_TO_NAME[game_arr[4]] || game_arr[4]
-      home_team = CODE_TO_NAME[game_arr[6]] || game_arr[6]
+      away_team = string_to_token(game_arr[4])
+      home_team = string_to_token(game_arr[6])
       # Replace score "" with nil
       away_score = game_arr[5] == "" ? nil : game_arr[5]
       home_score = game_arr[7] == "" ? nil : game_arr[7]

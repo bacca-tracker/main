@@ -5,10 +5,6 @@ class FailedToParseException < RuntimeError
 
 end
 
-def contains_two_team_names(line)
-  TEAM_GEOS.map { | team | line.include?(team) }.count(true) == 2
-end
-
 def parse_bet(line)
   odds = /(\d+\/\d+|evens)/
   raise(FailedToParseException.new, "Not a valid bet - #{line}") unless line =~ /^\|([A-Za-z \.]+)\|\s\@\s#{odds}(\s(\+|\-)\S+)?/
@@ -42,14 +38,15 @@ private
     this_game = ""
     bet_text.each_line { | line |
       if game_descriptor
-        raise(FailedToParseException.new, "Not a valid descriptor - #{line}") unless contains_two_team_names(line)
-        line =~ /^(.*)\sv\s(.*)$/
-        team1 = $1
-        team2 = $2
+        if !(line =~ /^(.*)\sv\s(.*)$/)
+          raise(FailedToParseException.new, "Not a valid descriptor - #{line}")
+        end
+        team1 = string_to_token($1)
+        team2 = string_to_token($2)
         # Work around for St Louis Rams, TODO FIXME when I have more time.
         team1 = "St. Louis"  if team1 == "St. Louis Rams"
-        raise(FailedToParseException.new, "Not a team1 - #{team1}") unless TEAM_GEOS.include?(team1)
-        raise(FailedToParseException.new, "Not a team2 - #{team2}") unless TEAM_GEOS.include?(team2)
+        raise(FailedToParseException.new, "Not a team1 - #{team1}") unless !team1.nil?
+        raise(FailedToParseException.new, "Not a team2 - #{team2}") unless !team2.nil?
         this_game = get_game(team1, team2)
         raise(FailedToParseException.new, "No game for for - #{line}") unless this_game
       else

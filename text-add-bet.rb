@@ -43,8 +43,6 @@ private
         end
         team1 = string_to_token($1)
         team2 = string_to_token($2)
-        # Work around for St Louis Rams, TODO FIXME when I have more time.
-        team1 = "St. Louis"  if team1 == "St. Louis Rams"
         raise(FailedToParseException.new, "Not a team1 - #{team1}") unless !team1.nil?
         raise(FailedToParseException.new, "Not a team2 - #{team2}") unless !team2.nil?
         this_game = get_game(team1, team2)

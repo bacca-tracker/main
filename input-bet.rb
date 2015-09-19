@@ -27,7 +27,7 @@ class BetInput
 
   def ask_bet_for_game(game)
     puts INSTRUCTION
-    puts "1. #{game.home_team} vs 2. #{game.away_team}"
+    puts "1. #{token_to_display_name(game.home_team)} vs 2. #{token_to_display_name(game.away_team)}"
     result = $stdin.gets.strip
     if (result == NO_BET)
       return ask_spread_for_game(game, nil)

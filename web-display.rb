@@ -120,7 +120,7 @@ module WebDisplay
         bet = acc.get_bet(game)
         if bet
           puts "<td></td>"
-          bet_on_str = bet.bet_on
+          bet_on_str = token_to_display_name(bet.bet_on)
           bet_on_str += "(#{bet.display_spread})" if bet.spread != 0
           puts "<td>#{bet_on_str}</td>"
           puts "<td></td>"

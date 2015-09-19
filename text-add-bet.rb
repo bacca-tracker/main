@@ -9,7 +9,7 @@ def parse_bet(line)
   odds = /(\d+\/\d+|evens)/
   raise(FailedToParseException.new, "Not a valid bet - #{line}") unless line =~ /^\|([A-Za-z \.]+)\|\s\@\s#{odds}(\s(\+|\-)\S+)?/
   spread = $3 ? $3.strip : 0
-  return $1, spread
+  return string_to_token($1), spread
 end
 
 def get_bet_text

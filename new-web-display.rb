@@ -53,6 +53,8 @@ def is_critical?(bet_arr)
   return true
 end
 
+CRITICAL_TEXT = "<img src=\"http://upload.wikimedia.org/wikipedia/commons/a/af/Radioactivity_symbol.png\" height=\"20\">"
+
 class Viewer
 
   # Parameters for debug
@@ -142,7 +144,7 @@ private
   def table_one_row(game, bets)
     str = ""
     if (is_critical?(bets))
-      str += "<td>CC</td>"
+      str += "<td>#{CRITICAL_TEXT}</td>"
     else
       str += "<td></td>"
     end

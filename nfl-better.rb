@@ -6,7 +6,7 @@ require_relative 'include-parsers.rb'
 require_relative 'input-bet.rb'
 require_relative 'mechanize-get-bets.rb'
 require_relative 'text-add-bet.rb'
-require_relative 'web-display.rb'
+require_relative 'new-web-display.rb'
 
 require 'getoptlong'
 require 'yaml'
@@ -128,11 +128,19 @@ module RunOptions
     display
   end
 
+=begin
   def web_display(mode)
     # Refresh game scores, compare with stored accumulators, output HTML
     include WebDisplay
     accumulators, games = (mode == Modes::NON_REFRESHING_SINGLE) ? non_refreshing_load_one_from_CGI : refreshing_load_accumulators
     display_html(accumulators, games, mode)
+  end
+=end
+
+  def web_display(mode)
+    # Refresh game scores, compare with stored accumulators, output HTML
+    accumulators, games = refreshing_load_accumulators
+    new_display_html(accumulators, games)
   end
 
 end

@@ -1,4 +1,6 @@
+## NB This should be retired.
 
+require_relative 'colours.rb'
 require_relative 'team-names.rb'
 
 module WebDisplay
@@ -8,13 +10,6 @@ module WebDisplay
     GRAPH    = "2"
     NON_REFRESHING_SINGLE = "3"
   end
-
-  # Constants
-  RED = "#FF0000"
-  YELLOW = "#FFFF00"
-  GREEN = "#00FF00"
-  WHITE = "#FFFFFF"
-  LIGHT_GRAY = "#D3D3D3"
 
   # Parameters for debug
   ROW_ALT_1 = WHITE
@@ -77,7 +72,7 @@ module WebDisplay
     puts "<style>"
     puts "body {font-family:Arial,Helvetica,sans-serif;}"
     puts "</style>"
-    puts "<head>"
+    puts "</head>"
     puts "<body>"
     puts "<h1>Results</h1>"
     puts "<hr>"

@@ -1,4 +1,5 @@
 
+require_relative 'colours.rb'
 require_relative 'game.rb'
 
 class Bet

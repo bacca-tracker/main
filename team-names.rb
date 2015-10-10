@@ -3,7 +3,9 @@
 # Public Interface #
 ####################
 def token_to_display_name(tok)
-  TOKEN_TO_DISPLAY_NAME[tok]
+  ret = TOKEN_TO_DISPLAY_NAME[tok]
+  raise "Token Not Found: \"#{tok}\"" if ret.nil?
+  return ret
 end
 
 def string_to_token(str)

@@ -40,6 +40,19 @@ class DisplayTable
 
 end
 
+# A game is critical, if every accumulator has bet the same way on that game.
+def is_critical?(bet_arr)
+  team = bet_arr[0].bet_on
+  return false if team.nil? # Not everyone has bet on this game.
+  bet_arr.each {
+  | bet |
+    if (bet.bet_on != team)
+      return false
+    end
+  }
+  return true
+end
+
 class Viewer
 
   # Parameters for debug
@@ -99,6 +112,7 @@ private
     str += "<thead>\n"
 
     str += "<tr>\n"
+    str += "<td></td>\n"
     str += "<td align='center' colspan='5'></td>\n"
     dispaly_table.game_cols.each do
     | acc, _ |
@@ -107,6 +121,7 @@ private
     str += "</tr>\n"
 
     str += "<tr bgcolor=\"#{row_alt_colour(-1)}\">\n"
+    str += "<td></td>\n"
     str += "<td align='center' colspan='5'><b>Game</b></td>\n"
     dispaly_table.game_cols.each do
       str += "<td width=100></td>\n"
@@ -126,6 +141,11 @@ private
 
   def table_one_row(game, bets)
     str = ""
+    if (is_critical?(bets))
+      str += "<td>CC</td>"
+    else
+      str += "<td></td>"
+    end
     away_team_display = token_to_display_name(game.away_team)
     home_team_display = token_to_display_name(game.home_team)
     str += "<td align='right'>#{away_team_display}</td><td align='right'>#{game.away_score}</td><td><b>@</b></td><td>#{game.home_score}</td><td>#{home_team_display}</td>"

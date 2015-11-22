@@ -7,7 +7,8 @@ end
 
 def parse_bet(line)
   odds = /(\d+\/\d+|evens)/
-  raise(FailedToParseException.new, "Not a valid bet - #{line}") unless line =~ /^\|([A-Za-z \.]+)\|\s\@\s#{odds}(\s(\+|\-)\S+)?/
+  # Include 49 in the below regex, as the 49ers have numbers not just digits in their name.
+  raise(FailedToParseException.new, "Not a valid bet - #{line}") unless line =~ /^\|([49A-Za-z \.]+)\|\s\@\s#{odds}(\s(\+|\-)\S+)?/
   spread = $3 ? $3.strip : 0
   return string_to_token($1), spread
 end

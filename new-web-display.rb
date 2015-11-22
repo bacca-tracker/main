@@ -42,10 +42,12 @@ end
 
 # A game is critical, if every accumulator has bet the same way on that game.
 def is_critical?(bet_arr)
+  return false if bet_arr[0].nil?
   team = bet_arr[0].bet_on
   return false if team.nil? # Not everyone has bet on this game.
   bet_arr.each {
   | bet |
+    return false if bet.nil?
     if (bet.bet_on != team)
       return false
     end

@@ -8,7 +8,7 @@ require_relative 'common-web-display.rb'
 
 def blocky_display_html(accumulators, games)
   table = DisplayTable.new(accumulators, games)
-  viewer = Viewer.new(table)
+  viewer = BlockyViewer.new(table)
   viewer.dump_to_stdout
 end
 
@@ -16,7 +16,12 @@ end
 # Internals #
 #############
 
-class Viewer
+def for_display(token)
+  # I think just using the token might be better for the blocky view.
+  return token
+end
+
+class BlockyViewer
 
   def initialize(display_table)
     @html_str = header_boiler_plate
@@ -50,11 +55,9 @@ private
   def format_name(name)
     str = ""
     str += "<td width=100></td>\n"
-    str += "<td width=30 colspan='3' align='center'>\n"
+    str += "<td width=30 colspan='1' align='center'>\n"
     location = LOCATION_OF_SINGLE_VIEW + "?Name=" + name
-    str += "<a href=\"#{location}\">\n"
     str += "<h2>#{name}</h2>\n"
-    str += "</a>\n"
     str += "</td>\n"
     return str
   end
@@ -82,9 +85,7 @@ private
     str += "<td align='center' colspan='5'><b>Game</b></td>\n"
     dispaly_table.game_cols.each do
       str += "<td width=100></td>\n"
-      str += "<td><b>Bet on</b></td>\n"
-      str += "<td width=30></td>\n"
-      str += "<td><b>Status</b></td>\n"
+      str += "<td></td>\n"
     end
     str += "</tr>\n"
 
@@ -92,8 +93,18 @@ private
     return str
   end
 
+  CELL_FONT_SIZE = 5
   def get_status_simple(bet)
-    "<td bgcolor=\"#{bet.get_colour}\"><center>&nbsp#{bet.display_status}&nbsp</center></td>"
+    bet_on_str = for_display(bet.bet_on)
+    bet_on_str += "&nbsp(#{bet.display_spread})" if bet.spread != 0
+
+    ret_str = "<td bgcolor=\"#{bet.get_colour}\">"
+    ret_str += "<font SIZE=#{CELL_FONT_SIZE}>"
+    ret_str += "<center>"
+    ret_str += "&nbsp#{bet_on_str}&nbsp"
+    ret_str += "</center>"
+    ret_str += "</font>"
+    ret_str += "</td>"
   end
 
   def table_one_row(game, bets)
@@ -103,22 +114,17 @@ private
     else
       str += "<td></td>"
     end
-    away_team_display = token_to_display_name(game.away_team)
-    home_team_display = token_to_display_name(game.home_team)
+    away_team_display = for_display(game.away_team)
+    home_team_display = for_display(game.home_team)
     str += "<td align='right'>#{away_team_display}</td><td align='right'>#{game.away_score}</td><td><b>@</b></td><td>#{game.home_score}</td><td>#{home_team_display}</td>"
 
     bets.each do
     | bet |
       if !bet.nil? && !bet.bet_on.nil?
         str += "<td></td>"
-        bet_on_str = token_to_display_name(bet.bet_on)
-        bet_on_str += "(#{bet.display_spread})" if bet.spread != 0
-        str += "<td>#{bet_on_str}</td>"
-        str += "<td></td>"
+
         str += get_status_simple(bet)
       else
-        str += "<td></td>"
-        str += "<td></td>"
         str += "<td></td>"
         str += "<td></td>"
       end

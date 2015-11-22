@@ -134,9 +134,9 @@ module RunOptions
   def web_display(mode)
     # Refresh game scores, compare with stored accumulators, output HTML
     accumulators, games = refreshing_load_accumulators
-    if (mode = 1.to_s)
+    if (mode == 1.to_s)
       new_display_html(accumulators, games)
-    elsif (mode = 2.to_s)
+    elsif (mode == 2.to_s)
       blocky_display_html(accumulators, games)
     else
       raise "Unknown web display mode = '#{mode}'"

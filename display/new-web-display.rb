@@ -8,7 +8,7 @@ require_relative 'common-web-display.rb'
 
 def new_display_html(accumulators, games)
   table = DisplayTable.new(accumulators, games)
-  viewer = Viewer.new(table)
+  viewer = NewViewer.new(table)
   viewer.dump_to_stdout
 end
 
@@ -16,7 +16,7 @@ end
 # Internals #
 #############
 
-class Viewer
+class NewViewer
 
   def initialize(display_table)
     @html_str = header_boiler_plate

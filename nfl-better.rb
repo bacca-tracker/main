@@ -1,12 +1,13 @@
 #!/usr/bin/ruby1.9.1
 
 require_relative 'accumulator.rb'
-require_relative 'console-display.rb'
+require_relative 'display/console-display.rb'
 require_relative 'include-parsers.rb'
 require_relative 'input-bet.rb'
 require_relative 'mechanize-get-bets.rb'
 require_relative 'text-add-bet.rb'
-require_relative 'new-web-display.rb'
+require_relative 'display/new-web-display.rb'
+require_relative 'display/blocky-web-display.rb'
 
 require 'getoptlong'
 require 'yaml'
@@ -82,7 +83,9 @@ module RunOptions
     puts "    --auto-add, -a         Script automatically logs into your betting account, and gets your bets."
     puts ""
     puts "  web only options, I don't even know why I'm documenting these:"
-    puts "    --web-display <mode>   Output HTML for a given mode"
+    puts "    --web-display <mode>   Output HTML for a given mode:"
+    puts "                           - 1 is the classic view."
+    puts "                           - 2 is the blockier view."
   end
 
   def canonical_numeric_value(acc)
@@ -131,7 +134,13 @@ module RunOptions
   def web_display(mode)
     # Refresh game scores, compare with stored accumulators, output HTML
     accumulators, games = refreshing_load_accumulators
-    new_display_html(accumulators, games)
+    if (mode = 1.to_s)
+      new_display_html(accumulators, games)
+    elsif (mode = 2.to_s)
+      blocky_display_html(accumulators, games)
+    else
+      raise "Unknown web display mode = '#{mode}'"
+    end
   end
 
 end
